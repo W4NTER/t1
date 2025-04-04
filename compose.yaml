@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      POSTGRES_DB: t1_database
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - "5439:5432"
+    volumes:
+      - postgresql:/var/lib/postgres/data
+    networks:
+      - backend
+
+
+  liquibase-migrations:
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgres
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgres:5432/t1_database
+      - --username=postgres
+      - --password=postgres
+      - update
+    volumes:
+      - ./migrations:/liquibase/changelog/
+    networks:
+      - backend
+
+volumes:
+  postgresql: { }
+
+networks:
+  backend: { }

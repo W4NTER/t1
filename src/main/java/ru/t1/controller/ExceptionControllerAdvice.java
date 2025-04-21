@@ -7,53 +7,53 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import ru.t1.dto.CustomExceptionDTO;
-import ru.t1.exceptions.EntityAlreadyExistsException;
-import ru.t1.exceptions.EntityNotFoundException;
-import ru.t1.exceptions.LoginAlreadyInUseException;
-import ru.t1.exceptions.UserNotFoundException;
+import ru.t1.dto.CustomExceptionDto;
+import ru.t1.exceptions.*;
 
 @ControllerAdvice
 public class ExceptionControllerAdvice {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    @ExceptionHandler(java.lang.Exception.class)
+    @ExceptionHandler(Exception.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public CustomExceptionDTO exception(java.lang.Exception e) {
-        LOGGER.error(e.getMessage());
-        return new CustomExceptionDTO(e.getMessage());
+    public CustomExceptionDto exception(java.lang.Exception e) {
+        LOGGER.error("message - {}, StackTrace - {}", e.getMessage(), e.getStackTrace());
+        return new CustomExceptionDto(e.getClass(), e.getMessage());
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public CustomExceptionDTO entityNotFound(EntityNotFoundException e) {
-        LOGGER.error(e.getMessage());
-        return new CustomExceptionDTO(e.getMessage());
+    public CustomExceptionDto entityNotFound(EntityNotFoundException e) {
+        return new CustomExceptionDto(e.getClass(), e.getMessage());
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public CustomExceptionDTO userNotFound(UserNotFoundException e) {
-        LOGGER.error(String.format("Exception type - (%s), Message - %s", e.getErrorType(), e.getMessage()));
-        return new CustomExceptionDTO(e.getErrorType(), "Пользователь не найден");
+    public CustomExceptionDto userNotFound(UserNotFoundException e) {
+        return new CustomExceptionDto(e.getClass(), e.getMessage());
     }
 
     @ExceptionHandler(LoginAlreadyInUseException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.CONFLICT)
-    public CustomExceptionDTO conflictUser(LoginAlreadyInUseException e) {
-        LOGGER.error(String.format("Exception type - (%s), Message - %s", e.getErrorType(), e.getMessage()));
-        return new CustomExceptionDTO(e.getErrorType(), "Username уже испльзуется другим пользователем");
+    public CustomExceptionDto conflictUser(LoginAlreadyInUseException e) {
+        return new CustomExceptionDto(e.getClass(), e.getMessage());
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.CONFLICT)
-    public CustomExceptionDTO entityAlreadyExists(EntityAlreadyExistsException e) {
-        LOGGER.error(String.format("Exception type - (%s), Message - %s", e.getErrorType(), e.getMessage()));
-        return new CustomExceptionDTO(e.getErrorType(), e.getMessage());
+    public CustomExceptionDto entityAlreadyExists(EntityAlreadyExistsException e) {
+        return new CustomExceptionDto(e.getClass(), e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidEmailException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CustomExceptionDto invalidEmail(InvalidEmailException e) {
+        return new CustomExceptionDto(e.getClass(), e.getMessage());
     }
 }

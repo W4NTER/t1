@@ -1,6 +1,7 @@
 package ru.t1.entity;
 
 import jakarta.persistence.*;
+import ru.t1.util.TaskStatusEnum;
 
 @Entity
 @Table(name = "task")
@@ -15,6 +16,10 @@ public class Task {
     @Column(name = "description")
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private TaskStatusEnum status;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -22,10 +27,19 @@ public class Task {
     public Task() {
     }
 
-    public Task(String title, String description, User user) {
+    public Task(String title, String description, User user, TaskStatusEnum status) {
         this.title = title;
         this.description = description;
         this.user = user;
+        this.status = status;
+    }
+
+    public TaskStatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatusEnum status) {
+        this.status = status;
     }
 
     public Long getId() {

@@ -26,10 +26,10 @@ public class LoggingAspect {
             throwing = "exception"
     )
     public void loggingAfterThrowing(JoinPoint joinPoint, RuntimeException exception) {
-        LOGGER.error(String.format("Exception in method - %s", joinPoint.getSignature().getName()));
-        LOGGER.error(String.format("Exception type is - %s and message - %s",
+        LOGGER.error("Exception in method - {}", joinPoint.getSignature().getName());
+        LOGGER.error("Exception type is - {} and message - {}",
                 exception.getClass().getSimpleName(),
-                exception.getMessage()));
+                exception.getMessage());
     }
 
     @AfterReturning(

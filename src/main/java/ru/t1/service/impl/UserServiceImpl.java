@@ -11,6 +11,7 @@ import ru.t1.exceptions.LoginAlreadyInUseException;
 import ru.t1.exceptions.UserNotFoundException;
 import ru.t1.repository.UserRepository;
 import ru.t1.service.UserService;
+import ru.t1.service.util.validator.UserValidator;
 
 import java.util.Optional;
 
@@ -18,21 +19,25 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
+    private final UserValidator userValidator;
 
-    public UserServiceImpl(UserRepository userRepository, ObjectMapper objectMapper) {
+    public UserServiceImpl(UserRepository userRepository, ObjectMapper objectMapper, UserValidator userValidator) {
         this.userRepository = userRepository;
         this.objectMapper = objectMapper;
+        this.userValidator = userValidator;
     }
 
     @Override
     @Transactional
     public UserResponse create(UserRequest user) {
+        userValidator.validateEmail(user.email());
+
         Optional<User> userEntity = userRepository.findByLogin(user.login());
 
         if (userEntity.isPresent()) {
             throw new LoginAlreadyInUseException(user.login());
         } else {
-            User newUser = new User(user.login(), user.password());
+            User newUser = new User(user.login(), user.password(), user.email());
             return objectMapper.convertValue(
                     userRepository.save(newUser), UserResponse.class);
         }
@@ -42,6 +47,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @LogTracking
     public UserResponse update(UserRequest user, Long id) {
+        userValidator.validateEmail(user.email());
+
         User userEntity = userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException(id));
 
@@ -51,6 +58,7 @@ public class UserServiceImpl implements UserService {
         } else {
             userEntity.setLogin(user.login());
             userEntity.setPassword(user.password());
+            userEntity.setEmail(user.email());
             return objectMapper.convertValue(userEntity, UserResponse.class);
         }
     }

@@ -7,14 +7,18 @@ import ru.t1.aspect.annotation.HandlingResult;
 import ru.t1.aspect.annotation.LogException;
 import ru.t1.aspect.annotation.LogExecution;
 import ru.t1.aspect.annotation.LogTracking;
+import ru.t1.config.kafka.kafkaConfig.KafkaConfig;
+import ru.t1.dto.TaskNotificationDto;
 import ru.t1.dto.request.TaskRequest;
 import ru.t1.dto.response.TaskResponse;
 import ru.t1.entity.Task;
 import ru.t1.entity.User;
 import ru.t1.exceptions.EntityNotFoundException;
+import ru.t1.kafka.KafkaClientProducer;
 import ru.t1.repository.TaskRepository;
 import ru.t1.service.TaskService;
 import ru.t1.service.UserService;
+import ru.t1.service.util.mapper.TaskMapper;
 
 import java.util.List;
 
@@ -23,14 +27,23 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final ObjectMapper objectMapper;
     private final UserService userService;
+    private final TaskMapper taskMapper;
+    private final KafkaClientProducer kafkaClientProducer;
+    private final KafkaConfig config;
 
     public TaskServiceImpl(
             TaskRepository taskRepository,
             ObjectMapper objectMapper,
-            UserService userService) {
+            UserService userService,
+            TaskMapper taskMapper,
+            KafkaClientProducer kafkaClientProducer,
+            KafkaConfig config) {
         this.taskRepository = taskRepository;
         this.objectMapper = objectMapper;
         this.userService = userService;
+        this.taskMapper = taskMapper;
+        this.kafkaClientProducer = kafkaClientProducer;
+        this.config = config;
     }
 
     @Override
@@ -39,9 +52,9 @@ public class TaskServiceImpl implements TaskService {
     @HandlingResult
     public TaskResponse create(TaskRequest task, Long userId) {
         User user = objectMapper.convertValue(userService.getUser(userId), User.class);
-        Task taskEntity = new Task(task.title(), task.description(), user);
+        Task taskEntity = new Task(task.title(), task.description(), user, task.status());
 
-        return convertToTaskResponse(taskRepository.save(taskEntity));
+        return taskMapper.toDto(taskRepository.save(taskEntity));
     }
 
     @Override
@@ -54,12 +67,22 @@ public class TaskServiceImpl implements TaskService {
 
         taskEntity.setTitle(task.title());
         taskEntity.setDescription(task.description());
-        return convertToTaskResponse(taskRepository.save(taskEntity));
+        checkStatus(task, taskEntity);
+        taskEntity.setStatus(task.status());
+        return taskMapper.toDto(taskRepository.save(taskEntity));
     }
 
-    private TaskResponse convertToTaskResponse(Task task) {
-        return new TaskResponse(task.getId(), task.getTitle(),
-                task.getDescription(), task.getUser().getId());
+    private void checkStatus(TaskRequest request, Task entity) {
+        if (!request.status().equals(entity.getStatus()) && !entity.getUser().getEmail().isBlank()) {
+            kafkaClientProducer.sendTo(
+                    config.topic().notifications(),
+                    new TaskNotificationDto(
+                            entity.getId(),
+                            entity.getStatus(),
+                            request.status(),
+                            System.getenv("EMAIL_RECIPIENT")
+                    ));
+        }
     }
 
     @Override
@@ -68,7 +91,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskResponse getTask(Long id) {
         Task task = taskRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Task.class.getSimpleName(), id));
-        return convertToTaskResponse(task);
+        return taskMapper.toDto(task);
     }
 
     @Override
@@ -96,6 +119,6 @@ public class TaskServiceImpl implements TaskService {
     @LogException
     public List<TaskResponse> getAll(Long userId) {
         return taskRepository.findAllByUserId(userId).stream()
-                .map(this::convertToTaskResponse).toList();
+                .map(taskMapper::toDto).toList();
     }
 }

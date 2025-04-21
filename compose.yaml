@@ -8,7 +8,7 @@ services:
     ports:
       - "5439:5432"
     volumes:
-      - postgresql:/var/lib/postgres/data
+      - postgresql:/var/lib/postgresql/data
     networks:
       - backend
 
@@ -28,6 +28,36 @@ services:
       - ./migrations:/liquibase/changelog/
     networks:
       - backend
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: kafka
+    ports:
+      - "29092:29092"
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_KRAFT_MODE: "true"
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://0.0.0.0:9092,CONTROLLER://kafka:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_METADATA_LOG_DIRS:  /tmp/kraft-combined-logs
+      KAFKA_LOG_RETENTION_HOURS: 10
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      CLUSTER_ID: ZWQ3ZDdhNmExMmJhMTFmMD
+    volumes:
+      - ./data/kafka:/tmp/kraft-combined-logs
+    networks:
+      - backend
+
 
 volumes:
   postgresql: { }

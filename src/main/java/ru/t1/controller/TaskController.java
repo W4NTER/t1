@@ -42,7 +42,7 @@ public class TaskController {
         return taskService.getTask(taskId);
     }
 
-    @DeleteMapping("/{task_id}|")
+    @DeleteMapping("/{task_id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteTask(@PathVariable("task_id") Long taskId) {
         taskService.delete(taskId);

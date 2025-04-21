@@ -13,6 +13,37 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
 
+app:
+  kafka:
+    bootstrap:
+      server: localhost:9092
+    consumer:
+      group-id: t1-group
+      max-poll-records: 10
+      max-poll-interval-ms: 30000
+      max-partition-fetch-bytes: 300000
+      session-timeout: 100000
+      auto-offset-reset: earliest
+      fixed-backoff-max-attempts: 3
+      fixed-backoff-interval-ms: 1000
+      heartbeat-interval-ms: 3000
+      poll-timeout: 4000
+      concurrency: 1
+      batch-listener: true
+      micrometer-enabled: true
+    producer:
+      enable: true
+    topic:
+      notifications: t1_task_notifications
+    listener:
+      poll-timeout: 1000
+  mail:
+    sender-login: ${SENDER_MAIL}
+    sender-password: ${PASSWORD}
+    port: 465
+    subject: t1_tasks_app
+
+
 springdoc:
   swagger-ui:
     path: /swagger-ui

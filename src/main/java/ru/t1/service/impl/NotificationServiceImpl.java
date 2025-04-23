@@ -2,7 +2,7 @@ package ru.t1.service.impl;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import ru.t1.aspect.annotation.LogExecution;
+import ru.starter_t1.aspect.annotation.LogExecution;
 import ru.t1.dto.TaskNotificationDto;
 import ru.t1.mailer.MailSender;
 import ru.t1.service.NotificationService;

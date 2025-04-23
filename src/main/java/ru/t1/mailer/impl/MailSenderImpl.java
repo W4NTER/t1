@@ -3,7 +3,7 @@ package ru.t1.mailer.impl;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
-import ru.t1.aspect.annotation.LogException;
+import ru.starter_t1.aspect.annotation.LogException;
 import ru.t1.config.Email.mailConfig.MailConfig;
 import ru.t1.mailer.MailSender;
 

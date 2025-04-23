@@ -3,7 +3,7 @@ package ru.t1.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.t1.aspect.annotation.LogTracking;
+import ru.starter_t1.aspect.annotation.LogTracking;
 import ru.t1.dto.request.UserRequest;
 import ru.t1.dto.response.UserResponse;
 import ru.t1.entity.User;

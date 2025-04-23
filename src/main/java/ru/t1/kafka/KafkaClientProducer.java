@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-import ru.t1.aspect.annotation.LogExecution;
+import ru.starter_t1.aspect.annotation.LogExecution;
 
 @Component
 public class KafkaClientProducer {

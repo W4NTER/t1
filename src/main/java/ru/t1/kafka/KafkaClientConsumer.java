@@ -6,7 +6,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
-import ru.t1.aspect.annotation.LogExecution;
+import ru.starter_t1.aspect.annotation.LogExecution;
 import ru.t1.dto.TaskNotificationDto;
 import ru.t1.service.NotificationService;
 

@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc8ebfb3-8bc0-4557-bb6d-35844b5e96d1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/t1/T1Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/t1/T1Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/t1/config/ApplicationConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/t1/config/kafka/ProducerConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/t1/config/kafka/ProducerConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/t1/mailer/impl/MailSenderImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/t1/mailer/impl/MailSenderImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/t1/aspect/LoggingAspect.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/t1/aspect/annotation/HandlingResult.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/t1/aspect/annotation/LogException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/t1/aspect/annotation/LogExecution.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/t1/aspect/annotation/LogTracking.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/t1/service/impl/TaskServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/t1/service/impl/TaskServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -66,7 +67,7 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Spring Boot.T1Application.executor": "Run",
-    "git-widget-placeholder": "hw2",
+    "git-widget-placeholder": "del__aspect",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "E:/IdeaProjects/t1/migrations",
     "node.js.detected.package.eslint": "true",
@@ -195,9 +196,9 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Docker.compose.yaml: Compose Deployment" />
         <item itemvalue="Docker.compose.yaml.kafka: Compose Deployment" />
         <item itemvalue="Docker.compose.yaml.postgres: Compose Deployment" />
+        <item itemvalue="Docker.compose.yaml: Compose Deployment" />
         <item itemvalue="Docker.compose.yaml.liquibase-migrations: Compose Deployment" />
         <item itemvalue="Docker.compose.yaml.controller_t1: Compose Deployment" />
       </list>

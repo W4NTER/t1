@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS task (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     title VARCHAR NOT NULL,
     description TEXT,
-    user_id BIGINT,
+    user_id BIGINT NOT NULL,
+    status VARCHAR NOT NULL,
     CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users (id)
 );

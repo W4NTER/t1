@@ -48,13 +48,6 @@ public class TaskController {
         taskService.delete(taskId);
     }
 
-    @GetMapping("/waiting")
-    @ResponseStatus(HttpStatus.OK)
-    public String waiting() {
-        taskService.justWaiting();
-        return "sleep is a best way to be healthy";
-    }
-
     @GetMapping("/all/{user_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<TaskResponse> getAllTasks(

@@ -3,6 +3,7 @@ package ru.t1.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +21,14 @@ public class ExceptionControllerAdvice {
     public CustomExceptionDto exception(java.lang.Exception e) {
         LOGGER.error("message - {}, StackTrace - {}", e.getMessage(), e.getStackTrace());
         return new CustomExceptionDto(e.getClass(), e.getMessage());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CustomExceptionDto handleInvalidJson(HttpMessageNotReadableException e) {
+        LOGGER.error("Invalid JSON input: {}, StackTrace - {}", e.getMessage(), e.getStackTrace());
+        return new CustomExceptionDto(e.getClass(), "Invalid JSON format: " + e.getMessage());
     }
 
     @ExceptionHandler(EntityNotFoundException.class)

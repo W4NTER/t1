@@ -14,7 +14,5 @@ public interface TaskService {
 
     void delete(Long id);
 
-    void justWaiting();
-
     List<TaskResponse> getAll(Long userId);
 }

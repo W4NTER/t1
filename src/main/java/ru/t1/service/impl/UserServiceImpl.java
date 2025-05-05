@@ -45,7 +45,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @LogTracking
     public UserResponse update(UserRequest user, Long id) {
         userValidator.validateEmail(user.email());
 
@@ -59,7 +58,7 @@ public class UserServiceImpl implements UserService {
             userEntity.setLogin(user.login());
             userEntity.setPassword(user.password());
             userEntity.setEmail(user.email());
-            return objectMapper.convertValue(userEntity, UserResponse.class);
+            return objectMapper.convertValue(userRepository.save(userEntity), UserResponse.class);
         }
     }
 

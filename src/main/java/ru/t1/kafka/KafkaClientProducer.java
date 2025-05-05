@@ -3,10 +3,8 @@ package ru.t1.kafka;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Component;
 import ru.starter_t1.aspect.annotation.LogExecution;
 
-@Component
 public class KafkaClientProducer {
     private final static Logger LOGGER = LogManager.getLogger();
     private final KafkaTemplate kafkaTemplate;

@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.starter_t1.aspect.annotation.HandlingResult;
 import ru.starter_t1.aspect.annotation.LogException;
 import ru.starter_t1.aspect.annotation.LogExecution;
-import ru.starter_t1.aspect.annotation.LogTracking;
 import ru.t1.config.kafka.kafkaConfig.KafkaConfig;
 import ru.t1.dto.TaskNotificationDto;
 import ru.t1.dto.request.TaskRequest;
@@ -73,7 +72,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private void checkStatus(TaskRequest request, Task entity) {
-        if (!request.status().equals(entity.getStatus()) && !entity.getUser().getEmail().isBlank()) {
+        if (!request.status().equals(entity.getStatus())) {
             kafkaClientProducer.sendTo(
                     config.topic().notifications(),
                     new TaskNotificationDto(
@@ -105,20 +104,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    @LogTracking
-    @LogException
-    public void justWaiting() {
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     @LogException
     public List<TaskResponse> getAll(Long userId) {
-        return taskRepository.findAllByUserId(userId).stream()
+        User user = objectMapper.convertValue(userService.getUser(userId), User.class);
+        return taskRepository.findAllByUser(user).stream()
                 .map(taskMapper::toDto).toList();
     }
 }

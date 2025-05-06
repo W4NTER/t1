@@ -27,7 +27,7 @@
 
 В проекте настроен сервис для анализа покрытия тестами с помощью [Codecov](https://codecov.io/), который отслеживает качество тестов и покрытие кода.
 
-[![codecov](https://codecov.io/gh/W4NTER/t1/graph/badge.svg)](https://codecov.io/gh/W4NTER/t1)
+[![codecov](https://codecov.io/gh/W4NTER/t1/branch/main/graph/badge.svg)](https://codecov.io/gh/W4NTER/t1)
 
 ## CI/CD
 

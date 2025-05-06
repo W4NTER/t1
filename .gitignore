@@ -3,3 +3,5 @@
 /target/
 
 .mvn
+*.class
+starter_t1/

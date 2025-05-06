@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
       packages: write
 
@@ -33,6 +33,46 @@ jobs:
 
       - name: Build and test with Maven
         run: mvn clean verify
+
+      - name: Check if jacoco.xml exists
+        run: |
+          if [ -f target/site/jacoco/jacoco.xml ]; then
+            echo "jacoco.xml found"
+          else
+            echo "jacoco.xml not found"
+            exit 1
+          fi
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Compile and run the Java script to update README badge
+        run: |
+          javac scripts/UpdateCoverageBadge.java
+          java -cp . scripts.UpdateCoverageBadge
+
+# Довольно плохой способ закинуть покрытие тестов в README, но разок реализовать можно)
+      - name: Commit updated README.md
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          CURRENT_BRANCH=${GITHUB_HEAD_REF}
+          git fetch origin $CURRENT_BRANCH
+          git checkout $CURRENT_BRANCH
+          
+          git diff --quiet README.md || echo "README.md has changes"
+          
+          if git diff --quiet README.md; then
+            echo "No changes to README.md, skipping commit."
+          else
+            git add README.md
+            git commit -m "Update coverage badge"
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:$CURRENT_BRANCH
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload JaCoCo coverage to PR
         uses: madrapps/jacoco-report@v1.6.1
